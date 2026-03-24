@@ -118,7 +118,7 @@
     min-height: 100vh;
     background:
       linear-gradient(135deg, rgba(58,7,16,0.92) 0%, rgba(86,10,22,0.88) 50%, rgba(58,7,16,0.95) 100%),
-      url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1600&q=80') center/cover no-repeat;
+      url('https://cdn.pixabay.com/photo/2019/09/19/18/52/nellore-4490033_1280.jpg') center/cover no-repeat;
     display: flex;
     align-items: center;
     position: relative;
@@ -1244,6 +1244,11 @@
     }
 
     /* Adjust sobre section for mobile */
+    .sobre-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
     .sobre-img-wrapper img {
       height: 300px;
     }
@@ -1372,9 +1377,8 @@
   <div class="sobre-grid">
     <div class="sobre-img-wrapper reveal">
       <img
-        src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&q=80"
+        src="https://cdn.pixabay.com/photo/2019/09/19/18/52/nellore-4490033_1280.jpg"
         alt="Infraestrutura rural Cordoaço"
-        loading="lazy"
       />
       <div class="sobre-badge-img">
         <strong>+20</strong>
