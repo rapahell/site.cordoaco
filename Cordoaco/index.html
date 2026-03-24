@@ -1248,6 +1248,11 @@
       height: 300px;
     }
 
+    .sobre-badge-img {
+      bottom: 10px;
+      right: 10px;
+    }
+
     /* Adjust mobile menu */
     .nav-links.open a {
       font-size: 0.9rem;
@@ -1283,14 +1288,15 @@
 
     .nav-links.open {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
+      flex-wrap: wrap;
       position: fixed;
       top: 70px;
       left: 0;
       right: 0;
       background: var(--crimson-deep);
-      padding: 2rem 5%;
-      gap: 1.5rem;
+      padding: 1rem 5%;
+      gap: 1rem;
     }
   }
 </style>
@@ -1366,7 +1372,7 @@
   <div class="sobre-grid">
     <div class="sobre-img-wrapper reveal">
       <img
-        src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=800&q=80"
+        src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&q=80"
         alt="Infraestrutura rural Cordoaço"
         loading="lazy"
       />
