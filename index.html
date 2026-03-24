@@ -118,7 +118,7 @@
     min-height: 100vh;
     background:
       linear-gradient(135deg, rgba(58,7,16,0.92) 0%, rgba(86,10,22,0.88) 50%, rgba(58,7,16,0.95) 100%),
-      url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1600&q=80') center/cover no-repeat;
+      url('https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&q=80') center/cover no-repeat;
     display: flex;
     align-items: center;
     position: relative;
@@ -1244,13 +1244,25 @@
     }
 
     /* Adjust sobre section for mobile */
+    .sobre-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
     .sobre-img-wrapper img {
       height: 300px;
     }
 
+    .sobre-badge-img {
+      bottom: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      font-size: 1.2rem;
+    }
+
     /* Adjust mobile menu */
     .nav-links.open a {
-      font-size: 0.9rem;
+      font-size: 0.7rem;
       white-space: nowrap;
     }
   }
@@ -1283,14 +1295,15 @@
 
     .nav-links.open {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
+      flex-wrap: nowrap;
       position: fixed;
       top: 70px;
       left: 0;
       right: 0;
       background: var(--crimson-deep);
-      padding: 2rem 5%;
-      gap: 1.5rem;
+      padding: 1rem 5%;
+      gap: 0.5rem;
     }
   }
 </style>
@@ -1366,9 +1379,8 @@
   <div class="sobre-grid">
     <div class="sobre-img-wrapper reveal">
       <img
-        src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=800&q=80"
+        src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&q=80"
         alt="Infraestrutura rural Cordoaço"
-        loading="lazy"
       />
       <div class="sobre-badge-img">
         <strong>+20</strong>
