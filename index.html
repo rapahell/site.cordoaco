@@ -1190,103 +1190,22 @@
   }
 
   @media (max-width: 768px) {
-    .hero-title-wrapper {
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
-    }
-
-    .hero-logo {
-      max-width: 220px;
-    }
-
-    .banner-principal {
-      height: 240px;
-      margin-bottom: 2rem;
-    }
-
-    .banner-principal a {
-      flex-direction: column;
-      justify-content: center;
-      padding: 2rem;
-    }
-
-    .banner-principal h3 {
-      font-size: 1.5rem;
-      text-align: center;
-    }
-
-    .banner-principal p {
-      display: none;
-    }
-
-    .banner-cta {
-      width: 100px;
-      height: 100px;
-      margin-left: 0;
-      margin-top: 1rem;
-    }
-
-    .galeria-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-    }
-
-    .galeria-overlay-simple h3 {
-      font-size: 0.95rem;
-    }
-
-    .galeria-overlay-simple p {
-      font-size: 0.7rem;
-    }
-
-    /* Mobile navbar */
-    .hamburger {
+    .nav-links.open {
       display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background: var(--crimson-deep);
+      max-height: calc(100vh - 70px);
+      overflow-y: auto;
+      padding: 0;
+      gap: 0;
+      animation: slideDown 0.3s ease-out;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
     }
 
-    .nav-links {
-      display: none;
-    }
-
-    /* Adjust hero stats for mobile */
-    .hero-stats {
-      right: 2%;
-      bottom: 5%;
-      gap: 1rem;
-    }
-
-    .stat-number {
-      font-size: 1.8rem;
-    }
-
-    .stat-label {
-      font-size: 0.6rem;
-    }
-
-    /* Adjust sobre section for mobile */
-    .sobre-grid {
-      grid-template-columns: 1fr;
-      gap: 3rem;
-    }
-
-    .sobre-img-wrapper {
-      display: none;
-    }
-
-    .sobre-img-wrapper img {
-      height: 300px;
-    }
-
-    .sobre-badge-img {
-      bottom: 20px;
-      right: 20px;
-      padding: 15px 20px;
-      font-size: 1.2rem;
-      display: none;
-    }
-
-    /* Adjust mobile menu */
     .nav-links.open a {
       font-size: 0.7rem;
       white-space: nowrap;
@@ -1389,7 +1308,7 @@
     <li><a href="#contato">Contato</a></li>
     <li><a href="#contato" class="nav-cta">Fale Conosco</a></li>
   </ul>
-  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu de navegação" aria-expanded="false" aria-controls="navLinks">
+  <button class="hamburger" id="hamburger" aria-label="Menu de navegação" aria-expanded="false" aria-controls="navLinks">
     <span aria-hidden="true"></span>
     <span aria-hidden="true"></span>
     <span aria-hidden="true"></span>
@@ -1733,8 +1652,8 @@
 </a>
 
 <script>
+  // Inicializar Lucide icons se disponível
   document.addEventListener('DOMContentLoaded', () => {
-    // Inicializar Lucide icons se disponível
     if (typeof lucide !== 'undefined') {
       lucide.createIcons();
     }
@@ -1746,18 +1665,13 @@
         : 'none';
     });
 
-    function toggleMenu() {
-      const navLinks = document.getElementById('navLinks');
-      const hamburger = document.getElementById('hamburger');
-      const isOpen = navLinks.classList.toggle('open');
-      hamburger.classList.toggle('active');
-      hamburger.setAttribute('aria-expanded', isOpen);
-    }
+    // Adiciona o evento de clique ao botão hamburger
+    document.getElementById('hamburger').addEventListener('click', toggleMenu);
 
+    // Fecha o menu ao clicar fora
     document.addEventListener('click', (e) => {
       const navLinks = document.getElementById('navLinks');
       const hamburger = document.getElementById('hamburger');
-      
       if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
         navLinks.classList.remove('open');
         hamburger.classList.remove('active');
@@ -1765,6 +1679,7 @@
       }
     });
 
+    // Fecha o menu ao clicar em um link
     document.querySelectorAll('.nav-links a').forEach(link => {
       link.addEventListener('click', () => {
         document.getElementById('navLinks').classList.remove('open');
@@ -1830,6 +1745,15 @@
       statsObserver.observe(heroStats);
     }
   });
+
+  // Função global para abrir/fechar o menu
+  function toggleMenu() {
+    const navLinks = document.getElementById('navLinks');
+    const hamburger = document.getElementById('hamburger');
+    const isOpen = navLinks.classList.toggle('open');
+    hamburger.classList.toggle('active');
+    hamburger.setAttribute('aria-expanded', isOpen);
+  }
 </script>
 </body>
 </html>
