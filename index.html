@@ -139,7 +139,7 @@
     min-height: 100vh;
     background:
       linear-gradient(135deg, rgba(58,7,16,0.92) 0%, rgba(86,10,22,0.88) 50%, rgba(58,7,16,0.95) 100%),
-      url('https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&q=80') center/cover no-repeat;
+      url('https://cdn.pixabay.com/photo/2019/09/19/18/52/nellore-4490033_1280.jpg') center/cover no-repeat;
     display: flex;
     align-items: center;
     position: relative;
@@ -1285,7 +1285,6 @@
       font-size: 1.2rem;
       display: none;
     }
-    }
 
     /* Adjust mobile menu */
     .nav-links.open a {
@@ -1449,7 +1448,7 @@
   <div class="sobre-grid">
     <div class="sobre-img-wrapper reveal">
       <img
-        src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&q=80"
+        src="https://cdn.pixabay.com/photo/2019/09/19/18/52/nellore-4490033_1280.jpg"
         alt="Infraestrutura rural Cordoaço"
       />
       <div class="sobre-badge-img">
@@ -1734,98 +1733,103 @@
 </a>
 
 <script>
-  lucide.createIcons();
-
-  const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
-    navbar.style.boxShadow = window.scrollY > 50
-      ? '0 4px 30px rgba(0,0,0,0.3)'
-      : 'none';
-  });
-
-  function toggleMenu() {
-    const navLinks = document.getElementById('navLinks');
-    const hamburger = document.getElementById('hamburger');
-    const isOpen = navLinks.classList.toggle('open');
-    hamburger.classList.toggle('active');
-    hamburger.setAttribute('aria-expanded', isOpen);
-  }
-
-  document.addEventListener('click', (e) => {
-    const navLinks = document.getElementById('navLinks');
-    const hamburger = document.getElementById('hamburger');
-    
-    if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
-      navLinks.classList.remove('open');
-      hamburger.classList.remove('active');
-      hamburger.setAttribute('aria-expanded', 'false');
+  document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar Lucide icons se disponível
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
     }
-  });
 
-  document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
-      document.getElementById('navLinks').classList.remove('open');
-      document.getElementById('hamburger').classList.remove('active');
-      document.getElementById('hamburger').setAttribute('aria-expanded', 'false');
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.style.boxShadow = window.scrollY > 50
+        ? '0 4px 30px rgba(0,0,0,0.3)'
+        : 'none';
     });
-  });
 
-  // Fechar menu ao pressionar Escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
+    function toggleMenu() {
       const navLinks = document.getElementById('navLinks');
       const hamburger = document.getElementById('hamburger');
-      navLinks.classList.remove('open');
-      hamburger.classList.remove('active');
-      hamburger.setAttribute('aria-expanded', 'false');
+      const isOpen = navLinks.classList.toggle('open');
+      hamburger.classList.toggle('active');
+      hamburger.setAttribute('aria-expanded', isOpen);
+    }
+
+    document.addEventListener('click', (e) => {
+      const navLinks = document.getElementById('navLinks');
+      const hamburger = document.getElementById('hamburger');
+      
+      if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
+        navLinks.classList.remove('open');
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('navLinks').classList.remove('open');
+        document.getElementById('hamburger').classList.remove('active');
+        document.getElementById('hamburger').setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Fechar menu ao pressionar Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const navLinks = document.getElementById('navLinks');
+        const hamburger = document.getElementById('hamburger');
+        navLinks.classList.remove('open');
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    reveals.forEach(el => observer.observe(el));
+
+    function animateCounter(element, target, duration = 2000) {
+      let current = 0;
+      const increment = target / (duration / 16);
+      const interval = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          element.textContent = target + (element.dataset.suffix || '');
+          clearInterval(interval);
+        } else {
+          element.textContent = Math.floor(current) + (element.dataset.suffix || '');
+        }
+      }, 16);
+    }
+
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.dataset.counted) {
+          entry.target.dataset.counted = 'true';
+          document.querySelectorAll('.stat-number').forEach(stat => {
+            const target = parseInt(stat.textContent);
+            const suffix = stat.textContent.replace(/[0-9]/g, '');
+            stat.dataset.suffix = suffix;
+            animateCounter(stat, target, 2000);
+          });
+          statsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    const heroStats = document.querySelector('.hero-stats');
+    if (heroStats) {
+      statsObserver.observe(heroStats);
     }
   });
-
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 80);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-
-  reveals.forEach(el => observer.observe(el));
-
-  function animateCounter(element, target, duration = 2000) {
-    let current = 0;
-    const increment = target / (duration / 16);
-    const interval = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        element.textContent = target + (element.dataset.suffix || '');
-        clearInterval(interval);
-      } else {
-        element.textContent = Math.floor(current) + (element.dataset.suffix || '');
-      }
-    }, 16);
-  }
-
-  const statsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && !entry.target.dataset.counted) {
-        entry.target.dataset.counted = 'true';
-        document.querySelectorAll('.stat-number').forEach(stat => {
-          const target = parseInt(stat.textContent);
-          const suffix = stat.textContent.replace(/[0-9]/g, '');
-          stat.dataset.suffix = suffix;
-          animateCounter(stat, target, 2000);
-        });
-        statsObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.5 });
-
-  const heroStats = document.querySelector('.hero-stats');
-  if (heroStats) {
-    statsObserver.observe(heroStats);
-  }
 </script>
 </body>
 </html>
