@@ -100,17 +100,38 @@
   .hamburger {
     display: none;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
     cursor: pointer;
-    padding: 5px;
+    padding: 10px;
+    background: none;
+    border: none;
+    position: relative;
+    z-index: 101;
+  }
+
+  .hamburger:hover {
+    opacity: 0.8;
   }
 
   .hamburger span {
     display: block;
-    width: 25px;
-    height: 2px;
+    width: 24px;
+    height: 2.5px;
     background: var(--white);
-    transition: all 0.3s;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+  }
+
+  .hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+  }
+
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
   }
 
   /* ========== HERO ========== */
@@ -1301,15 +1322,56 @@
 
     .nav-links.open {
       display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
+      flex-direction: column;
       position: fixed;
       top: 70px;
       left: 0;
       right: 0;
       background: var(--crimson-deep);
-      padding: 1rem 5%;
-      gap: 0.5rem;
+      max-height: calc(100vh - 70px);
+      overflow-y: auto;
+      padding: 0;
+      gap: 0;
+      animation: slideDown 0.3s ease-out;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-10px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .nav-links.open li {
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-links.open li:last-child {
+      border-bottom: none;
+    }
+
+    .nav-links.open a {
+      font-size: 0.95rem;
+      white-space: normal;
+      display: block;
+      padding: 18px 5%;
+      transition: all 0.2s ease;
+    }
+
+    .nav-links.open a:active {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .nav-links.open .nav-cta {
+      margin: 1rem 5%;
+      width: calc(100% - 10%);
+      text-align: center;
+      padding: 14px 20px;
     }
   }
 </style>
@@ -1328,9 +1390,11 @@
     <li><a href="#contato">Contato</a></li>
     <li><a href="#contato" class="nav-cta">Fale Conosco</a></li>
   </ul>
-  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-    <span></span><span></span><span></span>
-  </div>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu de navegação" aria-expanded="false" aria-controls="navLinks">
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -1680,7 +1744,11 @@
   });
 
   function toggleMenu() {
-    document.getElementById('navLinks').classList.toggle('open');
+    const navLinks = document.getElementById('navLinks');
+    const hamburger = document.getElementById('hamburger');
+    const isOpen = navLinks.classList.toggle('open');
+    hamburger.classList.toggle('active');
+    hamburger.setAttribute('aria-expanded', isOpen);
   }
 
   document.addEventListener('click', (e) => {
@@ -1689,13 +1757,28 @@
     
     if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
       navLinks.classList.remove('open');
+      hamburger.classList.remove('active');
+      hamburger.setAttribute('aria-expanded', 'false');
     }
   });
 
   document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', () => {
       document.getElementById('navLinks').classList.remove('open');
+      document.getElementById('hamburger').classList.remove('active');
+      document.getElementById('hamburger').setAttribute('aria-expanded', 'false');
     });
+  });
+
+  // Fechar menu ao pressionar Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const navLinks = document.getElementById('navLinks');
+      const hamburger = document.getElementById('hamburger');
+      navLinks.classList.remove('open');
+      hamburger.classList.remove('active');
+      hamburger.setAttribute('aria-expanded', 'false');
+    }
   });
 
   const reveals = document.querySelectorAll('.reveal');
