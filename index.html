@@ -1619,7 +1619,15 @@
 </style>
 </head>
 <body>
+<script>
+  const senha = "1234";
 
+  const user = prompt("Digite a senha:");
+
+  if (user !== senha) {
+    document.body.innerHTML = "Acesso negado";
+  }
+</script>
 <!-- NAVBAR -->
 <nav id="navbar">
   <a href="#inicio" class="nav-logo">
