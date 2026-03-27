@@ -1418,142 +1418,72 @@
 
   /* ========== RESPONSIVE ========== */
   @media (max-width: 1024px) {
-    .banner-principal {
-      height: 280px;
-    }
-
-    .banner-principal h3 {
-      font-size: 1.8rem;
-    }
-
-    .banner-principal p {
-      font-size: 0.9rem;
-    }
-
     .galeria-grid {
       grid-template-columns: repeat(2, 1fr);
     }
-
     .downloads-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .depoimentos-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .contato-visual {
       grid-template-columns: 1fr;
     }
-
-    .contato-container {
+    .contato-cta-row {
       grid-template-columns: 1fr;
-      gap: 3rem;
     }
   }
 
   @media (max-width: 768px) {
+
+    /* HERO */
+    #inicio {
+      padding: 90px 5% 50px;
+    }
     .hero-title-wrapper {
       flex-direction: column;
       align-items: center;
       gap: 1.5rem;
     }
-
     .hero-logo {
-      max-width: 220px;
+      max-width: 200px;
     }
-
-    .banner-principal {
-      height: 240px;
-      margin-bottom: 2rem;
-    }
-
-    .banner-principal a {
-      flex-direction: column;
-      justify-content: center;
-      padding: 2rem;
-    }
-
-    .banner-principal h3 {
-      font-size: 1.5rem;
+    .hero-title {
+      font-size: 1.8rem;
       text-align: center;
     }
-
-    .banner-principal p {
-      display: none;
+    .hero-subtitle {
+      font-size: 0.88rem;
+      text-align: center;
     }
-
-    .banner-cta {
-      width: 100px;
-      height: 100px;
-      margin-left: 0;
-      margin-top: 1rem;
+    .hero-actions {
+      justify-content: center;
     }
-
-    .galeria-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-    }
-
-    .galeria-overlay-simple h3 {
-      font-size: 0.95rem;
-    }
-
-    .galeria-overlay-simple p {
-      font-size: 0.7rem;
-    }
-
-    /* Mobile navbar */
-    .hamburger {
-      display: flex;
-    }
-
-    .nav-links {
-      display: none;
-    }
-
-    /* Adjust hero stats for mobile */
     .hero-stats {
-      right: 2%;
-      bottom: 5%;
-      gap: 1rem;
+      position: static;
+      flex-direction: row;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      width: 100%;
     }
+    .stat-item { text-align: center; }
+    .stat-number { font-size: 1.5rem; }
+    .stat-label { font-size: 0.55rem; }
 
-    .stat-number {
-      font-size: 1.8rem;
-    }
+    /* HAMBURGER */
+    .hamburger { display: flex !important; }
+    .nav-links { display: none !important; }
+    .nav-links.open { display: flex !important; }
 
-    .stat-label {
-      font-size: 0.6rem;
-    }
-
-    /* Adjust sobre section for mobile */
-    .sobre-grid {
-      grid-template-columns: 1fr;
-      gap: 3rem;
-    }
-
-    .sobre-img-wrapper {
-      display: none;
-    }
-
-    .sobre-img-wrapper img {
-      height: 300px;
-    }
-
-    .sobre-badge-img {
-      bottom: 20px;
-      right: 20px;
-      padding: 15px 20px;
-      font-size: 1.2rem;
-      display: none;
-    }
-
-    /* Adjust mobile menu */
-    .nav-links.open a {
-      font-size: 0.7rem;
-      white-space: nowrap;
-    }
-
+    /* MENU ABERTO */
     .nav-links.open {
-      display: flex;
       flex-direction: column;
       position: fixed;
-      top: 70px;
-      left: 0;
-      right: 0;
+      top: 70px; left: 0; right: 0;
       background: var(--crimson-deep);
       max-height: calc(100vh - 70px);
       overflow-y: auto;
@@ -1561,72 +1491,60 @@
       gap: 0;
       animation: slideDown 0.3s ease-out;
       box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      z-index: 99;
     }
-
     @keyframes slideDown {
-      from {
-        transform: translateY(-10px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
+      from { transform: translateY(-10px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
     }
-
-    .nav-links.open li {
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .nav-links.open li:last-child {
-      border-bottom: none;
-    }
-
+    .nav-links.open li { border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .nav-links.open li:last-child { border-bottom: none; }
     .nav-links.open a {
       font-size: 0.95rem;
-      white-space: normal;
       display: block;
       padding: 18px 5%;
-      transition: all 0.2s ease;
+      color: rgba(255,255,255,0.85);
     }
-
-    .nav-links.open a:active {
-      background: rgba(255,255,255,0.1);
-    }
-
+    .nav-links.open a:active { background: rgba(255,255,255,0.1); }
     .nav-links.open .nav-cta {
       margin: 1rem 5%;
       width: calc(100% - 10%);
       text-align: center;
       padding: 14px 20px;
     }
+
+    /* SOBRE */
+    .sobre-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .sobre-img-wrapper { display: none; }
+    .sobre-features { grid-template-columns: 1fr; }
+
+    /* PRODUTOS */
+    .galeria-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+
+    /* DOWNLOADS */
+    .downloads-grid { grid-template-columns: 1fr !important; }
+
+    /* DEPOIMENTOS */
+    .depoimentos-grid { grid-template-columns: 1fr; }
+
+    /* CONTATO */
+    .contato-visual { grid-template-columns: 1fr; }
+    .fachada-wrapper img { height: 260px; min-height: 260px; }
+    .contato-cta-row { grid-template-columns: 1fr; gap: 2rem; }
   }
 
   @media (max-width: 480px) {
-    .banner-principal {
-      height: 200px;
-    }
-
-    .banner-principal a {
-      padding: 1.5rem;
-    }
-
-    .banner-principal h3 {
-      font-size: 1.2rem;
-    }
-
-    .banner-cta {
-      display: none;
-    }
-
-    .galeria-grid {
-      grid-template-columns: 1fr;
-      gap: 0.75rem;
-    }
-
-    .downloads-grid {
-      grid-template-columns: 1fr;
-    }
+    .galeria-grid { grid-template-columns: 1fr; gap: 0.6rem; }
+    .downloads-grid { grid-template-columns: 1fr !important; }
+    .hero-stats { gap: 1rem; }
+    .stat-number { font-size: 1.3rem; }
+    #sobre { padding: 60px 5%; }
+    #produtos { padding: 60px 5%; }
+    #catalogo { padding: 60px 5%; }
+    #depoimentos { padding: 60px 5%; }
+    #contato { padding: 60px 5%; }
+    .section-title { font-size: 1.6rem; }
+    .btn-primary, .btn-outline { padding: 12px 20px; font-size: 0.78rem; }
   }
 </style>
 </head>
