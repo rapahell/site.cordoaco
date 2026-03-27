@@ -1180,21 +1180,25 @@
 
   .fachada-wrapper {
     position: relative;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     cursor: ew-resize;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .fachada-wrapper::-webkit-scrollbar {
+    display: none;
   }
 
   .fachada-wrapper img {
-    width: 130%;
-    height: 100%;
-    min-height: 420px;
-    object-fit: cover;
-    object-position: left center;
+    width: auto;
+    height: 420px;
+    max-width: none;
     display: block;
-    transition: transform 0.08s linear;
-    will-change: transform;
     pointer-events: none;
     user-select: none;
+    transition: none;
   }
 
   .fachada-zoom {
@@ -1619,22 +1623,6 @@
 </style>
 </head>
 <body>
-<body>
-<script>
-  function verificar() {
-    const senha = "12345";
-    const input = document.getElementById("senha").value;
-
-    if (input === senha) {
-      document.getElementById("bloqueio").style.display = "none";
-    } else {
-      alert("Senha incorreta");
-    }
-  }
-</script>
-
-<!-- SEU SITE AQUI -->
-<nav id="navbar">
 
 <!-- NAVBAR -->
 <nav id="navbar">
@@ -1967,8 +1955,8 @@
 </section>
 
 <!-- CONTATO -->
-<section id="contato">
-  <div style="max-width:1200px; margin:0 auto; padding:100px 5%;">
+<section id="contato" style="background: var(--white); padding: 100px 5%;">
+  <div style="max-width:1200px; margin:0 auto;">
 
     <div class="section-header reveal" style="margin-bottom:2.5rem;">
       <div class="section-tag">
@@ -1979,7 +1967,7 @@
       <p class="section-desc">Estamos prontos para atender você presencialmente ou a distância.</p>
     </div>
 
-    <!-- FACHADA + MAPA -->
+    <!-- FACHADA + MAPA lado a lado -->
     <div class="contato-visual reveal">
       <div class="fachada-wrapper" id="fachadaWrapper">
         <img src="https://res.cloudinary.com/dnnnn7njk/image/upload/v1774408391/fachada2_ealpjb.jpg" alt="Fachada Cordoaço" loading="lazy" id="fachadaImg" />
@@ -1995,13 +1983,7 @@
           </svg>
         </button>
       </div>
-
-      <!-- LIGHTBOX -->
-      <div id="fachadaLightbox" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; align-items:center; justify-content:center; cursor:zoom-out;">
-        <button id="fachadaClose" style="position:absolute; top:1.5rem; right:1.5rem; background:rgba(255,255,255,0.1); border:none; color:#fff; width:44px; height:44px; border-radius:50%; cursor:pointer; font-size:1.4rem; display:flex; align-items:center; justify-content:center; transition:background 0.2s;" title="Fechar">✕</button>
-        <img src="https://res.cloudinary.com/dnnnn7njk/image/upload/v1774408391/fachada2_ealpjb.jpg" alt="Fachada Cordoaço" style="max-width:92vw; max-height:88vh; object-fit:contain; border-radius:4px; box-shadow:0 30px 80px rgba(0,0,0,0.6);" />
-      </div>
-      <div class="mapa-wrapper" style="border-radius:0; border:none; box-shadow:none;">
+      <div class="mapa-wrapper" style="border-radius:0 4px 4px 0; border:none; box-shadow:none;">
         <div class="mapa-header">
           <svg data-lucide="map-pin"></svg>
           <div class="mapa-header-text">
@@ -2018,6 +2000,12 @@
           title="Localização Cordoaço">
         </iframe>
       </div>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div id="fachadaLightbox" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; align-items:center; justify-content:center; cursor:zoom-out;">
+      <button id="fachadaClose" style="position:absolute; top:1.5rem; right:1.5rem; background:rgba(255,255,255,0.1); border:none; color:#fff; width:44px; height:44px; border-radius:50%; cursor:pointer; font-size:1.4rem; display:flex; align-items:center; justify-content:center; transition:background 0.2s;" title="Fechar">✕</button>
+      <img src="https://res.cloudinary.com/dnnnn7njk/image/upload/v1774408391/fachada2_ealpjb.jpg" alt="Fachada Cordoaço" style="max-width:92vw; max-height:88vh; object-fit:contain; border-radius:4px; box-shadow:0 30px 80px rgba(0,0,0,0.6);" />
     </div>
 
     <!-- CTA ABAIXO -->
@@ -2190,15 +2178,9 @@
     if (wrapper && img) {
       wrapper.addEventListener('mousemove', (e) => {
         const rect = wrapper.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width;
-        const maxShift = img.offsetWidth - wrapper.offsetWidth;
-        img.style.transform = `translateX(${-(x * maxShift)}px)`;
-      });
-
-      wrapper.addEventListener('mouseleave', () => {
-        img.style.transition = 'transform 0.5s ease';
-        img.style.transform = 'translateX(0)';
-        setTimeout(() => { img.style.transition = 'transform 0.08s linear'; }, 500);
+        const x = (e.clientX - rect.left) / rect.width; // 0 a 1
+        const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
+        wrapper.scrollLeft = x * maxScroll;
       });
     }
 
