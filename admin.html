@@ -113,16 +113,7 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 1.5rem 7rem;}
 </head>
 <body>
 
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo"><img src="https://raw.githubusercontent.com/rapahell/site.cordoaco/refs/heads/main/logo_cordo_01.png" alt="Cordoaço" /></div>
-    <div class="login-divider"></div>
-    <div class="login-sub">Painel Administrativo</div>
-    <input type="password" id="senha-input" placeholder="Digite a senha" autocomplete="current-password" />
-    <button id="btn-login">Entrar</button>
-    <p class="login-error" id="login-error">Senha incorreta. Tente novamente.</p>
-  </div>
-</div>
+<div id="login-screen" style="display:none"></div>
 
 <div class="popup-overlay" id="popup-token">
   <div class="popup-box">
@@ -173,8 +164,6 @@ main{max-width:960px;margin:0 auto;padding:2.5rem 1.5rem 7rem;}
 </div>
 
 <script>
-var SENHA_HASH='0f24c1243c1d4631124691995f374d9c7942716697d2f29bc576eb58bda1b0ce';
-var SENHA_B64='Y29yZG9hY29AMjAyNg==';
 var GH_USER='rapahell';
 var GH_REPO='site.cordoaco';
 var GH_BRANCH='main';
@@ -198,33 +187,13 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function getToken(){return sessionStorage.getItem('gh_token')||'';}
 function setStatus(m,t){var el=document.getElementById('save-status');el.textContent=m;el.className='save-status '+(t||'');}
 
-function sha256(str){
-  return crypto.subtle.digest('SHA-256',new TextEncoder().encode(str)).then(function(buf){
-    return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
-  });
-}
+
 
 function fazerLogin(){
-  var val=document.getElementById('senha-input').value;
-  if(!val){return;}
-  if(window.crypto&&window.crypto.subtle){
-    sha256(val).then(function(hash){
-      if(hash===SENHA_HASH){entrar();}
-      else{
-        var ok=false;
-        try{ok=btoa(unescape(encodeURIComponent(val)))===SENHA_B64;}catch(e){}
-        if(ok){entrar();}else{erroSenha();}
-      }
-    }).catch(function(){
-      var ok=false;
-      try{ok=btoa(unescape(encodeURIComponent(val)))===SENHA_B64;}catch(e){}
-      if(ok){entrar();}else{erroSenha();}
-    });
-  } else {
-    var ok=false;
-    try{ok=btoa(unescape(encodeURIComponent(val)))===SENHA_B64;}catch(e){}
-    if(ok){entrar();}else{erroSenha();}
-  }
+  var val=prompt('Cordoaço — Painel Admin\nDigite a senha:');
+  if(val===null){return;}
+  if(val==='cordoaco@2026'){entrar();}
+  else{alert('Senha incorreta. Tente novamente.');fazerLogin();}
 }
 
 function entrar(){
@@ -234,18 +203,12 @@ function entrar(){
   if(!getToken()){document.getElementById('popup-token').classList.add('open');}
 }
 
-function erroSenha(){
-  document.getElementById('login-error').style.display='block';
-  document.getElementById('senha-input').value='';
-  document.getElementById('senha-input').focus();
-}
+function erroSenha(){}
 
 function fazerLogout(){
-  document.getElementById('login-screen').style.display='flex';
   document.getElementById('admin-panel').style.display='none';
-  document.getElementById('senha-input').value='';
-  document.getElementById('login-error').style.display='none';
   sessionStorage.removeItem('gh_token');
+  fazerLogin();
 }
 
 function confirmarToken(){
@@ -476,9 +439,6 @@ function salvarTudo(){
   .finally(function(){document.getElementById('btn-save').disabled=false;});
 }
 
-document.getElementById('btn-login').onclick=fazerLogin;
-document.getElementById('senha-input').onkeydown=function(e){if(e.key==='Enter'){fazerLogin();}};
-document.getElementById('senha-input').oninput=function(){document.getElementById('login-error').style.display='none';};
 document.getElementById('btn-confirmar-token').onclick=confirmarToken;
 document.getElementById('btn-fechar-token').onclick=fecharPopupToken;
 document.getElementById('token-indicator').onclick=reabrirToken;
@@ -487,6 +447,7 @@ document.getElementById('btn-add-video').onclick=addVideo;
 document.getElementById('btn-add-projeto').onclick=addProjeto;
 document.getElementById('btn-add-depoimento').onclick=addDepoimento;
 document.getElementById('btn-save').onclick=salvarTudo;
+fazerLogin();
 window.handleDrop=handleDrop;
 window.handleImagem=handleImagem;
 window.removeVideo=removeVideo;
