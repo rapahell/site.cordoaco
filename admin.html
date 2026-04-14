@@ -105,8 +105,8 @@ main{max-width:960px;margin:0 auto;padding:2rem 1.5rem 6rem;}
   <div class="caixa">
     <img src="https://raw.githubusercontent.com/rapahell/site.cordoaco/refs/heads/main/logo_cordo_01.png" alt="Cordoaço" />
     <p>Painel Administrativo</p>
-    <input type="password" id="campo-senha" placeholder="Digite a senha" onkeydown="if(event.key==='Enter')login()" />
-    <button onclick="if(document.getElementById('campo-senha').value==='cordoaco@2026'){document.getElementById('tela-login').style.display='none';document.getElementById('tela-painel').style.display='block';init();if(!tok())document.getElementById('popup-token').classList.add('open');}else{document.getElementById('msg-erro').style.display='block';document.getElementById('campo-senha').value='';}">Entrar</button>
+    <input type="password" id="campo-senha" placeholder="Digite a senha" onkeydown="if(event.key==='Enter')document.getElementById('btn-entrar').click()" />
+    <button id="btn-entrar" onclick="if(document.getElementById('campo-senha').value==='cordoaco@2026'){document.getElementById('tela-login').style.display='none';document.getElementById('tela-painel').style.display='block';setTimeout(function(){init();},50);}else{document.getElementById('msg-erro').style.display='block';document.getElementById('campo-senha').value='';}">Entrar</button>
     <div class="erro" id="msg-erro">Senha incorreta.</div>
   </div>
 </div>
@@ -210,7 +210,9 @@ function init(){
     {tx:'Compro arames, grampos e todos os materiais de cerca aqui. A equipe conhece o produto de verdade e me ajuda a escolher o que é melhor para cada situação.',nm:'Renata Carvalho',cg:'Pecuarista — Mineiros, GO'},
     {tx:'Precisei de um tronco de contenção e brete com urgência. A Cordoaço entregou rápido e o suporte foi excelente. Empresa séria, de confiança.',nm:'Anderson Leite',cg:'Engenheiro agrônomo — Rio Verde, GO'}
   ]));
-  setTimeout(function(){rG();rV();rP();rD();}, 50);
+  rG();rV();rP();rD();
+  // Sempre exige token ao entrar
+  if(!tok()) abrirToken();
 }
 
 function upload(path,b64,msg){
