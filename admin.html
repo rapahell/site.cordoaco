@@ -20,19 +20,65 @@
     background-image:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(201,147,58,0.04) 40px,rgba(201,147,58,0.04) 41px);
   }
   .login-box {
-    background:var(--crimson); border-radius:4px; padding:3rem 2.5rem;
-    width:100%; max-width:380px; box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    background:var(--crimson); border-radius:6px; padding:3rem 2.5rem;
+    width:100%; max-width:380px; box-shadow:0 24px 64px rgba(0,0,0,0.55);
     text-align:center; border:1px solid rgba(201,147,58,0.25);
   }
   .login-logo img { height:56px; width:auto; display:block; margin:0 auto; filter:drop-shadow(0 2px 10px rgba(0,0,0,0.4)); }
   .login-divider { width:40px; height:1px; background:rgba(201,147,58,0.4); margin:1.25rem auto; }
   .login-sub { font-size:0.68rem; color:rgba(255,255,255,0.45); letter-spacing:3px; text-transform:uppercase; margin-bottom:2rem; }
-  .login-box input { width:100%; padding:12px 16px; border:1.5px solid rgba(255,255,255,0.15); border-radius:3px; font-size:1rem; margin-bottom:1rem; outline:none; background:rgba(0,0,0,0.25); color:white; transition:border 0.2s,background 0.2s; }
-  .login-box input::placeholder { color:rgba(255,255,255,0.3); }
-  .login-box input:focus { border-color:var(--gold); background:rgba(0,0,0,0.35); }
-  .login-box button { width:100%; padding:13px; background:var(--gold); color:var(--crimson-deep); border:none; border-radius:3px; font-size:0.85rem; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:background 0.2s,transform 0.1s; }
-  .login-box button:hover { background:var(--gold-light); }
-  .login-box button:active { transform:scale(0.98); }
+
+  .login-senha-wrap {
+    position:relative;
+    margin-bottom:1rem;
+  }
+  .login-senha-wrap input {
+    width:100%;
+    padding:13px 48px 13px 16px;
+    border:1.5px solid rgba(255,255,255,0.15);
+    border-radius:4px;
+    font-size:0.95rem;
+    outline:none;
+    background:rgba(0,0,0,0.25);
+    color:white;
+    transition:border 0.2s, background 0.2s;
+    margin-bottom:0;
+  }
+  .login-senha-wrap input::placeholder { color:rgba(255,255,255,0.3); }
+  .login-senha-wrap input:focus { border-color:var(--gold); background:rgba(0,0,0,0.35); }
+
+  .btn-olho {
+    position:absolute;
+    right:0;
+    top:0;
+    height:100%;
+    width:46px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:none;
+    border:none;
+    cursor:pointer;
+    color:rgba(255,255,255,0.35);
+    transition:color 0.2s;
+    padding:0;
+    border-radius:0 4px 4px 0;
+  }
+  .btn-olho:hover { color:rgba(255,255,255,0.8); }
+  .btn-olho svg { width:18px; height:18px; stroke-width:2; pointer-events:none; }
+
+  .btn-entrar {
+    width:100%; padding:13px;
+    background:var(--gold); color:var(--crimson-deep);
+    border:none; border-radius:4px;
+    font-size:0.85rem; font-weight:900;
+    letter-spacing:1.5px; text-transform:uppercase;
+    cursor:pointer; transition:background 0.2s, transform 0.1s;
+    margin-top:0.25rem;
+  }
+  .btn-entrar:hover { background:var(--gold-light); }
+  .btn-entrar:active { transform:scale(0.98); }
+
   .login-error { color:#ffb3a7; font-size:0.82rem; margin-top:0.75rem; display:none; }
 
   /* TOKEN POPUP */
@@ -196,8 +242,16 @@
     </div>
     <div class="login-divider"></div>
     <div class="login-sub">Painel Administrativo</div>
-    <input type="password" id="senha-input" placeholder="Digite a senha" autocomplete="current-password" />
-    <button onclick="fazerLogin()">Entrar</button>
+    <div class="login-senha-wrap">
+      <input type="password" id="senha-input" placeholder="Digite a senha" autocomplete="current-password" />
+      <button class="btn-olho" id="btn-olho" type="button" aria-label="Mostrar senha">
+        <svg id="icone-olho" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </button>
+    </div>
+    <button class="btn-entrar" id="btn-login">Entrar</button>
     <p class="login-error" id="login-error">Senha incorreta. Tente novamente.</p>
   </div>
 </div>
@@ -216,11 +270,11 @@
       </p>
       <div class="popup-input-row">
         <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" />
-        <button class="btn-sm" onclick="confirmarToken()">Confirmar</button>
+        <button class="btn-sm" id="btn-confirmar-token">Confirmar</button>
       </div>
     </div>
     <div class="popup-foot">
-      <button class="popup-cancel" onclick="fecharPopupToken()">Entrar sem salvar por enquanto</button>
+      <button class="popup-cancel" id="btn-fechar-token">Entrar sem salvar por enquanto</button>
     </div>
   </div>
 </div>
@@ -233,8 +287,8 @@
     </div>
     <div class="header-badge">Painel Admin</div>
     <div class="header-right">
-      <span class="token-indicator" id="token-indicator" onclick="reabrirToken()">⚠ Sem token</span>
-      <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+      <span class="token-indicator" id="token-indicator">⚠ Sem token</span>
+      <button class="btn-logout" id="btn-logout">Sair</button>
     </div>
   </header>
 
@@ -261,7 +315,7 @@
       <div class="section-head"><span class="icon">🎬</span><h2>Vídeos do YouTube</h2></div>
       <div class="section-body">
         <div class="multi-items" id="videos-list"></div>
-        <button class="btn-add" onclick="addVideo()">+ Adicionar vídeo</button>
+        <button class="btn-add" id="btn-add-video">+ Adicionar vídeo</button>
       </div>
     </div>
 
@@ -270,7 +324,7 @@
       <div class="section-head"><span class="icon">📄</span><h2>Projetos e Fichas Técnicas</h2></div>
       <div class="section-body">
         <div class="multi-items" id="projetos-list"></div>
-        <button class="btn-add" onclick="addProjeto()">+ Adicionar projeto</button>
+        <button class="btn-add" id="btn-add-projeto">+ Adicionar projeto</button>
       </div>
     </div>
 
@@ -279,14 +333,14 @@
       <div class="section-head"><span class="icon">💬</span><h2>Depoimentos</h2></div>
       <div class="section-body">
         <div id="depoimentos-list"></div>
-        <button class="btn-add" onclick="addDepoimento()">+ Adicionar depoimento</button>
+        <button class="btn-add" id="btn-add-depoimento">+ Adicionar depoimento</button>
       </div>
     </div>
   </main>
 
   <div class="save-bar">
     <div class="save-status" id="save-status">Faça as alterações e clique em Salvar Tudo.</div>
-    <button class="btn-save" id="btn-save" onclick="salvarTudo()">💾 Salvar Tudo</button>
+    <button class="btn-save" id="btn-save">💾 Salvar Tudo</button>
   </div>
 </div>
 
@@ -313,8 +367,30 @@
 
   // ── LOGIN ──
   document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btn-olho').addEventListener('click', () => {
+      const input = document.getElementById('senha-input');
+      const icone = document.getElementById('icone-olho');
+      if (input.type === 'password') {
+        input.type = 'text';
+        // Ícone eye-off (Lucide)
+        icone.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+      } else {
+        input.type = 'password';
+        // Ícone eye (Lucide)
+        icone.innerHTML = '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>';
+      }
+      input.focus();
+    });
     document.getElementById('senha-input').addEventListener('keydown', e => { if(e.key==='Enter') fazerLogin(); });
-    document.getElementById('token-input').addEventListener('keydown',  e => { if(e.key==='Enter') confirmarToken(); });
+    document.getElementById('token-input').addEventListener('keydown', e => { if(e.key==='Enter') confirmarToken(); });
+    document.getElementById('btn-confirmar-token').addEventListener('click', confirmarToken);
+    document.getElementById('btn-fechar-token').addEventListener('click', fecharPopupToken);
+    document.getElementById('token-indicator').addEventListener('click', reabrirToken);
+    document.getElementById('btn-logout').addEventListener('click', fazerLogout);
+    document.getElementById('btn-add-video').addEventListener('click', addVideo);
+    document.getElementById('btn-add-projeto').addEventListener('click', addProjeto);
+    document.getElementById('btn-add-depoimento').addEventListener('click', addDepoimento);
+    document.getElementById('btn-save').addEventListener('click', salvarTudo);
   });
 
   async function sha256(str) {
@@ -665,4 +741,3 @@
 </script>
 </body>
 </html>
-
