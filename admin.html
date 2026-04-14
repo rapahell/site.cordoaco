@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin | Cordoaço</title>
+<style>
+:root{--crimson:#51150A;--gold:#C9933A;--gold-light:#E8B55A;--cream:#F5EFE6;--success:#2d7a4f;--error:#c0392b;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',sans-serif;background:var(--cream);min-height:100vh;}
+#tela-login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#2A0A06;}
+.caixa{background:#51150A;border-radius:6px;padding:3rem 2.5rem;width:100%;max-width:360px;text-align:center;border:1px solid rgba(201,147,58,.3);}
+.caixa img{height:52px;display:block;margin:0 auto 1rem;}
+.caixa p{font-size:.7rem;color:rgba(255,255,255,.4);letter-spacing:3px;text-transform:uppercase;margin-bottom:1.5rem;}
+.caixa input{width:100%;padding:13px 16px;border:1.5px solid rgba(255,255,255,.2);border-radius:4px;background:rgba(0,0,0,.3);color:white;font-size:1rem;outline:none;margin-bottom:.75rem;}
+.caixa input::placeholder{color:rgba(255,255,255,.3);}
+.caixa button{width:100%;padding:13px;background:var(--gold);color:#2A0A06;border:none;border-radius:4px;font-size:.85rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;}
+.caixa button:hover{background:var(--gold-light);}
+.erro{color:#ffb3a7;font-size:.82rem;margin-top:.5rem;display:none;}
+#tela-painel{display:none;}
+header{background:#2A0A06;color:white;padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+header img{height:36px;}
+.badge{font-size:.65rem;background:rgba(201,147,58,.15);border:1px solid rgba(201,147,58,.3);color:var(--gold-light);padding:3px 12px;border-radius:20px;letter-spacing:2px;}
+.hdir{display:flex;align-items:center;gap:.75rem;}
+.tok-ok{font-size:.7rem;padding:3px 10px;border-radius:20px;background:rgba(45,122,79,.15);color:#2d7a4f;border:1px solid rgba(45,122,79,.3);}
+.tok-no{font-size:.7rem;padding:3px 10px;border-radius:20px;background:rgba(192,57,43,.12);color:var(--error);border:1px solid rgba(192,57,43,.25);cursor:pointer;}
+.sair{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);padding:5px 12px;border-radius:3px;font-size:.75rem;cursor:pointer;}
+main{max-width:960px;margin:0 auto;padding:2rem 1.5rem 6rem;}
+.bloco{background:white;border-radius:4px;box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:1.5rem;overflow:hidden;}
+.bloco-topo{background:#51150A;color:white;padding:.9rem 1.5rem;font-size:.8rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.bloco-corpo{padding:1.5rem;}
+.instrucoes{background:#f0f7f0;border:1px solid #b8ddb8;border-radius:4px;padding:1.25rem;margin-bottom:1.5rem;font-size:.82rem;line-height:1.8;color:#2d5a2d;}
+.instrucoes strong{font-weight:700;}
+.galeria-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:1rem;}
+.gcard{border:2px solid #e8e0d8;border-radius:4px;overflow:hidden;}
+.gcard img{width:100%;height:130px;object-fit:cover;display:block;background:#f0ebe4;}
+.gcard-body{padding:.7rem;background:#faf7f4;}
+.gtitle{font-size:.72rem;font-weight:700;color:#51150A;text-transform:uppercase;margin-bottom:.5rem;}
+.uzone{border:2px dashed #d0c8c0;border-radius:3px;padding:.7rem;text-align:center;cursor:pointer;position:relative;background:white;}
+.uzone:hover{border-color:var(--gold);background:#fffdf8;}
+.uzone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.uzone-txt{font-size:.7rem;color:#999;pointer-events:none;}
+.uprog{margin-top:.4rem;height:3px;background:#eee;border-radius:2px;overflow:hidden;display:none;}
+.uprog-bar{height:100%;width:0;background:var(--gold);transition:width .3s;}
+.ust{font-size:.68rem;margin-top:.3rem;text-align:center;min-height:.9rem;}
+.ust.ok{color:var(--success);}
+.ust.err{color:var(--error);}
+.ust.load{color:var(--gold);}
+.multi{display:flex;flex-direction:column;gap:.5rem;}
+.mitem{display:flex;gap:.5rem;align-items:center;}
+.mitem input{flex:1;padding:9px 12px;border:1.5px solid #ddd;border-radius:3px;font-size:.82rem;outline:none;}
+.mitem input:focus{border-color:var(--gold);}
+.mitem input::placeholder{color:#bbb;font-style:italic;}
+.btn-rm{background:none;border:1.5px solid #ddd;color:#bbb;border-radius:3px;width:32px;height:34px;cursor:pointer;flex-shrink:0;}
+.btn-rm:hover{border-color:var(--error);color:var(--error);}
+.btn-add{margin-top:.5rem;padding:6px 14px;background:#f5f0ea;border:1.5px solid #ddd;color:#51150A;border-radius:3px;font-size:.75rem;font-weight:700;cursor:pointer;}
+.btn-add:hover{background:#ede5da;border-color:var(--gold);}
+.pitem{background:#faf7f4;border:1.5px solid #e8e0d8;border-radius:4px;padding:.75rem;position:relative;margin-bottom:.6rem;}
+.pitem input[type=text]{width:100%;padding:7px 10px;border:1.5px solid #ddd;border-radius:3px;font-size:.82rem;outline:none;background:white;margin-bottom:.5rem;}
+.pitem input[type=text]:focus{border-color:var(--gold);}
+.pfila{display:flex;align-items:center;gap:.5rem;}
+.pbtn{padding:5px 12px;background:#51150A;color:white;border:none;border-radius:3px;font-size:.7rem;font-weight:700;cursor:pointer;position:relative;overflow:hidden;flex-shrink:0;}
+.pbtn:hover{background:#3E100A;}
+.pbtn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.pfname{font-size:.7rem;color:#888;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pfname.ok{color:var(--success);font-weight:700;}
+.pprog{height:3px;background:#eee;border-radius:2px;overflow:hidden;display:none;margin-top:.3rem;}
+.pprog-bar{height:100%;width:0;background:var(--gold);transition:width .3s;}
+.btn-rmx{position:absolute;top:.4rem;right:.4rem;background:none;border:none;color:#ccc;font-size:.9rem;cursor:pointer;}
+.btn-rmx:hover{color:var(--error);}
+.ditem{background:#faf7f4;border:1.5px solid #e8e0d8;border-radius:4px;padding:.9rem;position:relative;margin-bottom:.6rem;}
+.ditem textarea{width:100%;padding:8px 10px;border:1.5px solid #ddd;border-radius:3px;font-size:.85rem;outline:none;resize:vertical;min-height:75px;background:white;font-family:'Segoe UI',sans-serif;}
+.ditem textarea:focus{border-color:var(--gold);}
+.drow{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem;}
+.ditem input[type=text]{width:100%;padding:7px 10px;border:1.5px solid #ddd;border-radius:3px;font-size:.8rem;outline:none;background:white;}
+.ditem input[type=text]:focus{border-color:var(--gold);}
+.dlabel{font-size:.68rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+.save-bar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:2px solid var(--gold);padding:.9rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;box-shadow:0 -4px 20px rgba(0,0,0,.08);z-index:9;}
+.save-st{font-size:.82rem;color:#888;flex:1;}
+.save-st.ok{color:var(--success);font-weight:700;}
+.save-st.err{color:var(--error);font-weight:700;}
+.save-st.load{color:var(--gold);font-weight:700;}
+.btn-save{padding:11px 28px;background:var(--gold);color:#2A0A06;border:none;border-radius:3px;font-size:.85rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;}
+.btn-save:hover{background:var(--gold-light);}
+.btn-save:disabled{opacity:.5;cursor:not-allowed;}
+.popup-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;align-items:center;justify-content:center;padding:1.5rem;}
+.popup-ov.open{display:flex;}
+.popup{background:white;border-radius:4px;width:100%;max-width:460px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4);}
+.popup-head{background:#3E100A;color:white;padding:1.1rem 1.5rem;font-size:.8rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.popup-body{padding:1.5rem;}
+.popup-desc{font-size:.85rem;color:#666;line-height:1.7;margin-bottom:1rem;}
+.popup-desc strong{color:#51150A;}
+.popup-row{display:flex;gap:.75rem;}
+.popup-row input{flex:1;padding:9px 12px;border:1.5px solid #ddd;border-radius:3px;font-size:.85rem;font-family:monospace;outline:none;}
+.popup-row input:focus{border-color:var(--gold);}
+.popup-foot{padding:0 1.5rem 1.2rem;display:flex;justify-content:flex-end;}
+.popup-cancel{background:none;border:none;color:#bbb;font-size:.8rem;cursor:pointer;padding:6px 10px;}
+.btn-conf{padding:9px 18px;background:var(--gold);color:#2A0A06;border:none;border-radius:3px;font-size:.78rem;font-weight:900;cursor:pointer;}
+@media(max-width:600px){header{padding:0 1rem;}.badge{display:none;}.galeria-grid{grid-template-columns:1fr 1fr;}.save-bar{padding:.7rem 1rem;}.drow{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div id="tela-login">
+  <div class="caixa">
+    <img src="https://raw.githubusercontent.com/rapahell/site.cordoaco/refs/heads/main/logo_cordo_01.png" alt="Cordoaço" />
+    <p>Painel Administrativo</p>
+    <input type="password" id="campo-senha" placeholder="Digite a senha" onkeydown="if(event.key==='Enter')login()" />
+    <button onclick="if(document.getElementById('campo-senha').value==='cordoaco@2026'){document.getElementById('tela-login').style.display='none';document.getElementById('tela-painel').style.display='block';init();if(!tok())document.getElementById('popup-token').classList.add('open');}else{document.getElementById('msg-erro').style.display='block';document.getElementById('campo-senha').value='';}">Entrar</button>
+    <div class="erro" id="msg-erro">Senha incorreta.</div>
+  </div>
+</div>
+
+<div id="tela-painel">
+  <header>
+    <img src="https://raw.githubusercontent.com/rapahell/site.cordoaco/refs/heads/main/logo_cordo_01.png" alt="Cordoaço" />
+    <span class="badge">Painel Admin</span>
+    <div class="hdir">
+      <span id="tok-ind" class="tok-no" onclick="abrirToken()">⚠ Sem token</span>
+      <button class="sair" onclick="sair()">Sair</button>
+    </div>
+  </header>
+  <main>
+    <div class="instrucoes"><strong>Como usar:</strong><br>📷 <strong>Galeria:</strong> clique em "Escolher foto" — envio automático.<br>🎬 <strong>Vídeos:</strong> cole o link do YouTube.<br>📄 <strong>Projetos:</strong> dê um nome e envie o PDF.<br>💬 <strong>Depoimentos:</strong> edite texto, nome e cargo.<br>💾 Clique em <strong>Salvar Tudo</strong> para publicar.</div>
+    <div class="bloco"><div class="bloco-topo">🖼️ &nbsp;Galeria de Fotos</div><div class="bloco-corpo"><div class="galeria-grid" id="galeria-grid"></div></div></div>
+    <div class="bloco"><div class="bloco-topo">🎬 &nbsp;Vídeos do YouTube</div><div class="bloco-corpo"><div class="multi" id="videos-list"></div><button class="btn-add" onclick="addVideo()">+ Adicionar vídeo</button></div></div>
+    <div class="bloco"><div class="bloco-topo">📄 &nbsp;Projetos e Fichas Técnicas</div><div class="bloco-corpo"><div id="projetos-list"></div><button class="btn-add" onclick="addProjeto()">+ Adicionar projeto</button></div></div>
+    <div class="bloco"><div class="bloco-topo">💬 &nbsp;Depoimentos</div><div class="bloco-corpo"><div id="dep-list"></div><button class="btn-add" onclick="addDep()">+ Adicionar depoimento</button></div></div>
+  </main>
+  <div class="save-bar">
+    <div class="save-st" id="save-st">Faça as alterações e clique em Salvar Tudo.</div>
+    <button class="btn-save" id="btn-save" onclick="salvar()">💾 Salvar Tudo</button>
+  </div>
+</div>
+
+<div class="popup-ov" id="popup-token">
+  <div class="popup">
+    <div class="popup-head">🔑 &nbsp;Token de Acesso</div>
+    <div class="popup-body">
+      <p class="popup-desc">Insira o <strong>token do GitHub</strong> fornecido pelo desenvolvedor.<br><small style="color:#aaa">Necessário apenas uma vez por sessão.</small></p>
+      <div class="popup-row">
+        <input type="password" id="campo-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+        <button class="btn-conf" onclick="confirmarToken()">OK</button>
+      </div>
+    </div>
+    <div class="popup-foot"><button class="popup-cancel" onclick="fecharToken()">Entrar sem salvar por enquanto</button></div>
+  </div>
+</div>
+
+<script>
+var SENHA = 'cordoaco@2026';
+var GH_USER = 'rapahell';
+var GH_REPO = 'site.cordoaco';
+var GH_BRANCH = 'main';
+var FILE_PATH = 'index.html';
+var IMG_FOLDER = 'uploads/imagens';
+var PDF_FOLDER = 'uploads/projetos';
+
+var galeriaInicial = [
+  {t:'Produto 1',s:'https://res.cloudinary.com/dnnnn7njk/image/upload/v1774407055/01_jfw6gp.jpg'},
+  {t:'Produto 2',s:'https://res.cloudinary.com/dnnnn7njk/image/upload/v1774407055/02_smbtbv.jpg'},
+  {t:'Produto 3',s:'https://res.cloudinary.com/dnnnn7njk/image/upload/v1774407056/08_sqyvnm.jpg'},
+  {t:'Produto 4',s:'https://res.cloudinary.com/dnnnn7njk/image/upload/v1774935199/fotonova_ykmzfe.jpg'},
+  {t:'Produto 5',s:'https://res.cloudinary.com/dnnnn7njk/image/upload/v1774407056/03_bsre4u.jpg'},
+  {t:'Produto 6',s:'https://res.cloudinary.com/dnnnn7njk/image/upload/v1774407055/06_zyqwxj.jpg'}
+];
+
+var G=[], V=[], P=[], D=[];
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function tok(){return sessionStorage.getItem('tok')||'';}
+function st(m,c){var e=document.getElementById('save-st');e.textContent=m;e.className='save-st '+(c||'');}
+
+
+
+
+
+function sair(){
+  document.getElementById('tela-painel').style.display='none';
+  document.getElementById('tela-login').style.display='flex';
+  document.getElementById('campo-senha').value='';
+  document.getElementById('msg-erro').style.display='none';
+  sessionStorage.removeItem('tok');
+}
+
+function confirmarToken(){
+  var t=document.getElementById('campo-token').value.trim();
+  if(!t)return;
+  sessionStorage.setItem('tok',t);
+  document.getElementById('popup-token').classList.remove('open');
+  atualizarTok();
+  st('Pronto! Faça as alterações e clique em Salvar Tudo.','');
+}
+function fecharToken(){document.getElementById('popup-token').classList.remove('open');}
+function abrirToken(){document.getElementById('campo-token').value='';document.getElementById('popup-token').classList.add('open');}
+function atualizarTok(){
+  var e=document.getElementById('tok-ind');
+  if(tok()){e.textContent='✓ Token ativo';e.className='tok-ok';}
+  else{e.textContent='⚠ Sem token';e.className='tok-no';}
+}
+
+function init(){
+  atualizarTok();
+  var sg=localStorage.getItem('cord_g');
+  G=sg?JSON.parse(sg):galeriaInicial.map(function(x){return {t:x.t,s:x.s};});
+  V=JSON.parse(localStorage.getItem('cord_v')||'[""]');
+  P=JSON.parse(localStorage.getItem('cord_p')||'[{"n":"","u":""}]');
+  D=JSON.parse(localStorage.getItem('cord_d')||JSON.stringify([
+    {tx:'A Cordoaço é parceira da nossa fazenda há mais de dez anos. O atendimento é sempre ágil, os produtos são de primeira qualidade e o preço é justo. Não troco por nada.',nm:'José Mendonça',cg:'Produtor rural — Jataí, GO'},
+    {tx:'Compro arames, grampos e todos os materiais de cerca aqui. A equipe conhece o produto de verdade e me ajuda a escolher o que é melhor para cada situação.',nm:'Renata Carvalho',cg:'Pecuarista — Mineiros, GO'},
+    {tx:'Precisei de um tronco de contenção e brete com urgência. A Cordoaço entregou rápido e o suporte foi excelente. Empresa séria, de confiança.',nm:'Anderson Leite',cg:'Engenheiro agrônomo — Rio Verde, GO'}
+  ]));
+  rG();rV();rP();rD();
+}
+
+function upload(path,b64,msg){
+  var t=tok();
+  if(!t)return Promise.reject(new Error('Token não configurado'));
+  return fetch('https://api.github.com/repos/'+GH_USER+'/'+GH_REPO+'/contents/'+path,{headers:{'Authorization':'token '+t,'Accept':'application/vnd.github.v3+json'}})
+  .then(function(r){return r.ok?r.json():null;})
+  .then(function(ex){
+    var b={message:msg,content:b64,branch:GH_BRANCH};
+    if(ex&&ex.sha)b.sha=ex.sha;
+    return fetch('https://api.github.com/repos/'+GH_USER+'/'+GH_REPO+'/contents/'+path,{method:'PUT',headers:{'Authorization':'token '+t,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(b)});
+  })
+  .then(function(r){if(!r.ok)return r.json().then(function(e){throw new Error(e.message);});return 'https://raw.githubusercontent.com/'+GH_USER+'/'+GH_REPO+'/'+GH_BRANCH+'/'+path;});
+}
+
+function comprimir(file){
+  return new Promise(function(res){
+    var img=new Image(),url=URL.createObjectURL(file);
+    img.onload=function(){
+      var s=Math.min(1,1600/img.width),c=document.createElement('canvas');
+      c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob(function(b){res(b);},'image/jpeg',.82);
+    };img.src=url;
+  });
+}
+function b64(blob){return new Promise(function(r){var fr=new FileReader();fr.onload=function(){r(fr.result.split(',')[1]);};fr.readAsDataURL(blob);});}
+
+var PH="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='130'%3E%3Crect fill='%23f0ebe4' width='200' height='130'/%3E%3Ctext x='50%25' y='50%25' font-size='11' fill='%23bbb' text-anchor='middle' dominant-baseline='middle'%3ESem imagem%3C/text%3E%3C/svg%3E";
+
+function rG(){
+  var h='';
+  for(var i=0;i<G.length;i++){
+    h+='<div class="gcard"><img id="gimg'+i+'" src="'+esc(G[i].s)+'" onerror="this.src=\''+PH+'\'" />';
+    h+='<div class="gcard-body"><div class="gtitle">'+esc(G[i].t)+'</div>';
+    h+='<div class="uzone" ondragover="event.preventDefault();this.classList.add(\'drag\')" ondragleave="this.classList.remove(\'drag\')" ondrop="dDrop(event,'+i+')">';
+    h+='<input type="file" accept="image/*" onchange="uImg(this,'+i+')" />';
+    h+='<div class="uzone-txt">📷 Escolher foto</div></div>';
+    h+='<div class="uprog" id="up'+i+'"><div class="uprog-bar" id="upb'+i+'"></div></div>';
+    h+='<div class="ust" id="ust'+i+'"></div></div></div>';
+  }
+  document.getElementById('galeria-grid').innerHTML=h;
+}
+
+function dDrop(e,i){e.preventDefault();e.currentTarget.classList.remove('drag');var f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))uProc(f,i);}
+function uImg(inp,i){if(inp.files[0])uProc(inp.files[0],i);}
+function uSt(i,m,c){var e=document.getElementById('ust'+i);e.textContent=m;e.className='ust '+(c||'');}
+function uShow(i,p){document.getElementById('up'+i).style.display='block';document.getElementById('upb'+i).style.width=p+'%';}
+function uHide(i){document.getElementById('up'+i).style.display='none';document.getElementById('upb'+i).style.width='0';}
+
+function uProc(file,i){
+  if(!tok()){uSt(i,'❌ Configure o token','err');abrirToken();return;}
+  uSt(i,'⏳ Comprimindo...','load');uShow(i,20);
+  comprimir(file).then(function(blob){return b64(blob).then(function(d){
+    var path=IMG_FOLDER+'/'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_').replace(/\.[^.]+$/,'.jpg');
+    uSt(i,'⏳ Enviando...','load');uShow(i,60);
+    return upload(path,d,'foto: '+G[i].t);
+  });}).then(function(url){
+    uShow(i,100);setTimeout(function(){uHide(i);},800);
+    G[i].s=url;document.getElementById('gimg'+i).src=url;
+    localStorage.setItem('cord_g',JSON.stringify(G));
+    uSt(i,'✅ Enviada!','ok');st('Foto atualizada. Clique em Salvar Tudo.','');
+  }).catch(function(err){uHide(i);uSt(i,'❌ '+err.message,'err');});
+}
+
+function rV(){
+  var h='';
+  for(var i=0;i<V.length;i++)
+    h+='<div class="mitem"><input type="url" value="'+esc(V[i])+'" placeholder="https://www.youtube.com/watch?v=..." oninput="V['+i+']=this.value" /><button class="btn-rm" onclick="rmV('+i+')">✕</button></div>';
+  document.getElementById('videos-list').innerHTML=h;
+}
+function addVideo(){V.push('');rV();}
+function rmV(i){if(V.length===1){V[0]='';rV();return;}V.splice(i,1);rV();}
+
+function rP(){
+  var h='';
+  for(var i=0;i<P.length;i++){
+    h+='<div class="pitem"><button class="btn-rmx" onclick="rmP('+i+')">✕</button>';
+    h+='<div class="dlabel">Nome</div><input type="text" value="'+esc(P[i].n)+'" placeholder="Nome do projeto" oninput="P['+i+'].n=this.value" />';
+    h+='<div class="pfila"><button class="pbtn">📎 Enviar PDF<input type="file" accept=".pdf" onchange="uPDF(this,'+i+')" /></button>';
+    h+='<span class="pfname '+(P[i].u?'ok':'')+'" id="pfn'+i+'">'+(P[i].u?'✅ PDF enviado':'Nenhum arquivo ainda')+'</span></div>';
+    h+='<div class="pprog" id="pp'+i+'"><div class="pprog-bar" id="ppb'+i+'"></div></div></div>';
+  }
+  document.getElementById('projetos-list').innerHTML=h;
+}
+function addProjeto(){P.push({n:'',u:''});rP();}
+function rmP(i){if(P.length===1){P[0]={n:'',u:''};rP();return;}P.splice(i,1);rP();}
+
+function uPDF(inp,i){
+  var file=inp.files[0];if(!file)return;
+  if(!tok()){document.getElementById('pfn'+i).textContent='❌ Configure o token';abrirToken();return;}
+  var fn=document.getElementById('pfn'+i),pp=document.getElementById('pp'+i),pb=document.getElementById('ppb'+i);
+  fn.textContent='⏳ Enviando...';fn.className='pfname';pp.style.display='block';pb.style.width='40%';
+  b64(file).then(function(d){
+    pb.style.width='70%';
+    return upload(PDF_FOLDER+'/'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_'),d,'pdf: '+(P[i].n||file.name));
+  }).then(function(url){
+    pb.style.width='100%';setTimeout(function(){pp.style.display='none';pb.style.width='0';},800);
+    P[i].u=url;localStorage.setItem('cord_p',JSON.stringify(P));
+    fn.textContent='✅ '+file.name;fn.className='pfname ok';
+    st('PDF enviado. Clique em Salvar Tudo.','');
+  }).catch(function(err){pp.style.display='none';fn.textContent='❌ '+err.message;fn.className='pfname err';});
+}
+
+function rD(){
+  var h='';
+  for(var i=0;i<D.length;i++){
+    h+='<div class="ditem"><button class="btn-rmx" onclick="rmD('+i+')">✕</button>';
+    h+='<div class="dlabel">Depoimento</div><textarea oninput="D['+i+'].tx=this.value">'+esc(D[i].tx)+'</textarea>';
+    h+='<div class="drow"><div><div class="dlabel">Nome</div><input type="text" value="'+esc(D[i].nm)+'" placeholder="Nome" oninput="D['+i+'].nm=this.value" /></div>';
+    h+='<div><div class="dlabel">Cargo / Cidade</div><input type="text" value="'+esc(D[i].cg)+'" placeholder="Cargo — Cidade, UF" oninput="D['+i+'].cg=this.value" /></div></div></div>';
+  }
+  document.getElementById('dep-list').innerHTML=h;
+}
+function addDep(){D.push({tx:'',nm:'',cg:''});rD();}
+function rmD(i){if(D.length===1){D[0]={tx:'',nm:'',cg:''};rD();return;}D.splice(i,1);rD();}
+
+function salvar(){
+  if(!tok()){st('❌ Configure o token primeiro.','err');abrirToken();return;}
+  localStorage.setItem('cord_g',JSON.stringify(G));
+  localStorage.setItem('cord_v',JSON.stringify(V));
+  localStorage.setItem('cord_p',JSON.stringify(P));
+  localStorage.setItem('cord_d',JSON.stringify(D));
+  st('⏳ Buscando index.html...','load');
+  document.getElementById('btn-save').disabled=true;
+  var t=tok();
+  fetch('https://api.github.com/repos/'+GH_USER+'/'+GH_REPO+'/contents/'+FILE_PATH+'?ref='+GH_BRANCH,{headers:{'Authorization':'token '+t,'Accept':'application/vnd.github.v3+json'}})
+  .then(function(r){if(!r.ok)return r.json().then(function(e){throw new Error(e.message);});return r.json();})
+  .then(function(fd){
+    var html=new TextDecoder().decode(Uint8Array.from(atob(fd.content.replace(/\n/g,'')),function(c){return c.charCodeAt(0);}));
+    st('⏳ Aplicando alterações...','load');
+    var orig=JSON.parse(localStorage.getItem('cord_g_orig')||'null')||galeriaInicial.map(function(x){return x.s;});
+    for(var i=0;i<G.length;i++){if(orig[i]&&G[i].s&&orig[i]!==G[i].s)html=html.split(orig[i]).join(G[i].s);}
+    localStorage.setItem('cord_g_orig',JSON.stringify(G.map(function(x){return x.s;})));
+    var stars='<svg data-lucide="star"></svg><svg data-lucide="star"></svg><svg data-lucide="star"></svg><svg data-lucide="star"></svg><svg data-lucide="star"></svg>';
+    var dc=D.filter(function(d){return d.tx||d.nm;}).map(function(d){
+      var ini=d.nm.split(' ').slice(0,2).map(function(w){return w[0]||'';}).join('').toUpperCase()||'??';
+      return '<div class="depoimento-card reveal"><div class="depoimento-aspas">\u201c</div><div class="depoimento-stars">'+stars+'</div><p class="depoimento-texto">'+d.tx+'</p><div class="depoimento-autor"><div class="depoimento-avatar">'+ini+'</div><div class="depoimento-info"><strong>'+d.nm+'</strong><span>'+d.cg+'</span></div></div></div>';
+    }).join('\n');
+    html=html.replace(/<div class="depoimentos-grid">[\s\S]*?<\/div>\s*<\/div>\s*<\/section>\s*<!-- CONTATO/,'<div class="depoimentos-grid">\n'+dc+'\n    </div>\n  </div>\n</section>\n\n<!-- CONTATO');
+    var vi=JSON.stringify(V.filter(function(v){return v.trim();})).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    var pi=JSON.stringify(P.filter(function(p){return p.u;})).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    var di=JSON.stringify(D).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    var dados='<script id="cord-d">localStorage.setItem(\'cord_v\',\''+vi+'\');localStorage.setItem(\'cord_p\',\''+pi+'\');localStorage.setItem(\'cord_d\',\''+di+'\');<\/script>';
+    html=html.replace(/<script id="cord-d">[\s\S]*?<\/script>\s*/g,'');
+    html=html.replace('</body>',dados+'\n</body>');
+    st('⏳ Salvando...','load');
+    return fetch('https://api.github.com/repos/'+GH_USER+'/'+GH_REPO+'/contents/'+FILE_PATH,{method:'PUT',headers:{'Authorization':'token '+t,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify({message:'admin: atualiza - '+new Date().toLocaleString('pt-BR'),content:btoa(unescape(encodeURIComponent(html))),sha:fd.sha,branch:GH_BRANCH})});
+  })
+  .then(function(r){if(!r.ok)return r.json().then(function(e){throw new Error(e.message);});st('✅ Salvo! Site atualizado em ~30 segundos.','ok');})
+  .catch(function(err){console.error(err);st('❌ '+err.message,'err');})
+  .finally(function(){document.getElementById('btn-save').disabled=false;});
+}
+</script>
+</body>
+</html>
