@@ -1,5 +1,5 @@
 /* ============================================================
-   CORDOAÇO — Integração com Sanity CMS  (v5 — abrirModal hook)
+   CORDOAÇO — Integração com Sanity CMS  (v6 — foto sobre + desc projetos)
    ============================================================ */
 
 (function () {
@@ -14,7 +14,7 @@
     ready: false,
   };
 
-  console.log('[CMS] v5 inicializando...');
+  console.log('[CMS] v6 inicializando...');
 
   async function query(groq) {
     const url = `${API_BASE}?query=${encodeURIComponent(groq)}`;
@@ -59,7 +59,7 @@
     return m ? m[1] : null;
   }
 
-  // ---------- Renderizadores que leem direto de window.__cmsData ----------
+  // ---------- Renderizadores ----------
 
   function renderVideos() {
     const el = document.getElementById('lista-videos');
@@ -102,7 +102,10 @@
     el.innerHTML = projetos.map(p => `
       <a class="modal-proj-item" href="${escapeHtml(p.pdfUrl || '#')}" target="_blank" rel="noopener">
         <div class="modal-proj-icon"><svg data-lucide="file-text"></svg></div>
-        <span class="modal-proj-name">${escapeHtml(p.titulo || 'Projeto')}</span>
+        <div class="modal-proj-info">
+          <span class="modal-proj-name">${escapeHtml(p.titulo || 'Projeto')}</span>
+          ${p.descricao ? `<span class="modal-proj-desc">${escapeHtml(p.descricao)}</span>` : ''}
+        </div>
         <div class="modal-proj-arrow"><svg data-lucide="arrow-right"></svg></div>
       </a>`).join('');
 
@@ -110,22 +113,16 @@
   }
 
   // ---------- Hook em window.abrirModal ----------
-  // O abrirModal original chama renderModalVideos/Projetos internas (closure).
-  // Agente intercepta o clique pra forçar a renderização com dados do Sanity
-  // DEPOIS que o abrirModal original termina.
 
   function instalarHookAbrirModal() {
     const original = window.abrirModal;
     if (typeof original !== 'function') {
-      // ainda não foi definida pelo site, tenta de novo em 100ms
       setTimeout(instalarHookAbrirModal, 100);
       return;
     }
 
     window.abrirModal = function (id) {
-      // chama o original (abre o modal, body overflow, etc.)
       original(id);
-      // depois sobrescreve o conteúdo com nossos dados do Sanity
       if (id === 'modal-videos') renderVideos();
       if (id === 'modal-projetos') renderProjetos();
     };
@@ -141,7 +138,7 @@
     const [galeria, depoimentos, config, videos, projetos] = await Promise.all([
       query('*[_id=="galeria"][0]'),
       query('*[_type=="depoimento"] | order(ordem asc) {nome, cargoCidade, texto}'),
-      query('*[_id=="configuracoes"][0]{"pdfUrl": catalogoPdf.asset->url}'),
+      query('*[_id=="configuracoes"][0]{"pdfUrl": catalogoPdf.asset->url, "fotoSobreRef": fotoSobre.asset._ref}'),
       query('*[_type=="video"] | order(ordem asc) {titulo, linkYoutube, descricao}'),
       query('*[_type=="projeto"] | order(ordem asc) {titulo, descricao, "pdfUrl": arquivoPdf.asset->url}'),
     ]);
@@ -150,6 +147,7 @@
       galeria: !!galeria,
       depoimentos: depoimentos?.length || 0,
       catalogo: !!config?.pdfUrl,
+      fotoSobre: !!config?.fotoSobreRef,
       videos: videos?.length || 0,
       projetos: projetos?.length || 0,
     });
@@ -194,12 +192,20 @@
       });
     }
 
+    // Foto Sobre (boi)
+    if (config?.fotoSobreRef) {
+      const url = imageUrl(config.fotoSobreRef, 'w=1200&q=80&auto=format');
+      if (url) {
+        const img = document.querySelector('[data-cms-foto-sobre]');
+        if (img) img.src = url;
+      }
+    }
+
     // Vídeos & Projetos
     window.__cmsData.videos = videos || [];
     window.__cmsData.projetos = projetos || [];
     window.__cmsData.ready = true;
 
-    // Pré-renderiza os modais (caso já estejam visíveis)
     renderVideos();
     renderProjetos();
 

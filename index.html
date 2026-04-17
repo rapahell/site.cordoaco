@@ -1049,6 +1049,29 @@
     color: var(--crimson-dark);
   }
 
+  .modal-proj-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .modal-proj-info .modal-proj-name {
+    flex: none;
+  }
+
+  .modal-proj-desc {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--text-light, #8A6055);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
   .modal-proj-arrow svg { width: 16px; height: 16px; stroke-width: 2.5; color: var(--gold); }
 
   .modal-empty {
@@ -1818,6 +1841,7 @@
   <div class="sobre-grid">
     <div class="sobre-img-wrapper reveal">
       <img
+        data-cms-foto-sobre
         src="https://res.cloudinary.com/dnnnn7njk/image/upload/v1774600604/boi_cerca_rm4ufa.jpg"
         alt="Infraestrutura rural Cordoaço"
       />
